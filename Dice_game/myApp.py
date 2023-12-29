@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, flash, redirect
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'd7a37cab03040bcbe14a5bd26ebe92be'
+app.config['SECRET_KEY'] = ''
 
 game = {
     'f_player': 0,
