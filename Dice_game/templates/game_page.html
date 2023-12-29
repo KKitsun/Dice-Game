@@ -1,0 +1,210 @@
+{% extends "index.html"%}
+{% block content %}
+
+  <div class="best-of-five">
+    Best of five
+  </div>
+
+  <div class="dice-container">
+    <div class="dice" id="first-dice">
+      <div class="side one"></div>
+      <div class="side two"></div>
+      <div class="side three"></div>
+      <div class="side four"></div>
+      <div class="side five"></div>
+      <div class="side six"></div>
+    </div>
+    <div class="dice" id="second-dice">
+      <div class="side one"></div>
+      <div class="side two"></div>
+      <div class="side three"></div>
+      <div class="side four"></div>
+      <div class="side five"></div>
+      <div class="side six"></div>
+    </div>
+  </div>
+  <div class="round-result-contatiner">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      {% if category == "win1" or category == "win2" or category == "draw" %}
+      <div class="{{category}}">
+        {{message}}
+      </div>
+      <script>
+        {% if category == "win1" %}
+          var timer = setTimeout(function(){
+            let nodes = document.getElementById('first-dice').getElementsByTagName("div");
+            for(var i=0; i<nodes.length; i++) {
+              nodes[i].style.background = "#1520A6";
+              nodes[i].style.transition = "background 1s ease";
+            }
+          }, 2000);
+        {% endif %}
+        {% if category == "win2" %}
+            var timer = setTimeout(function(){
+            let nodes = document.getElementById('second-dice').getElementsByTagName("div");
+            for(var i=0; i<nodes.length; i++) {
+              nodes[i].style.background = "#FF0000";
+              nodes[i].style.transition = "background 1s ease";
+            }
+        }, 2000);
+        {% endif %}
+      </script>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="roll-button">
+    <a href="{{ url_for('roll') }}" style="width: max-content;"><div class="button-31 button-31-red-blue" style="width: 150px;">Roll Dice</div></a>
+  </div>
+  {% if dice_one and dice_two %}
+  <script>
+
+    function DiceRotateTo(n) {
+      let x=0, y=20, z=30;
+      var DiceRotate = [];
+      switch (n) {
+        case 1:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340}deg) rotateX(${x}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+        case 2:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340+90}deg) rotateX(${x}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+        case 3:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340}deg) rotateX(${x+90}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+        case 4:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340}deg) rotateX(${x-90}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+        case 5:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340-90}deg) rotateX(${x}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+        case 6:
+          DiceRotate = [
+            { transform: `rotateY(${y}deg) rotateX(${x}deg) rotateZ(${z}deg)` },
+            { transform: `rotateY(${y+340+180}deg) rotateX(${x}deg) rotateZ(${z-30}deg)` }
+          ];
+          break;
+      }
+      return DiceRotate;
+    }
+
+    const DiceTiming = {
+      duration: 2000,
+      iterations: 1,
+      fill: 'forwards'
+    }
+
+    const dice = [...document.querySelectorAll(".dice")];
+
+    let n1 = {{dice_one}};
+    let n2 = {{dice_two}};
+
+    function RotateDiceOne() {
+      switch (n1) {
+        case 1:
+          dice[0].animate(DiceRotateTo(1), DiceTiming);
+          break;
+        case 2:
+          dice[0].animate(DiceRotateTo(2), DiceTiming);
+          break;
+        case 3:
+          dice[0].animate(DiceRotateTo(3), DiceTiming);
+          break;
+        case 4:
+          dice[0].animate(DiceRotateTo(4), DiceTiming);
+          break;
+        case 5:
+          dice[0].animate(DiceRotateTo(5), DiceTiming);
+          break;
+        case 6:
+          dice[0].animate(DiceRotateTo(6), DiceTiming);
+          break;
+      }
+    }
+    function RotateDiceTwo() {
+      switch (n2) {
+        case 1:
+          dice[1].animate(DiceRotateTo(1), DiceTiming);
+          break;
+        case 2:
+          dice[1].animate(DiceRotateTo(2), DiceTiming);
+          break;
+        case 3:
+          dice[1].animate(DiceRotateTo(3), DiceTiming);
+          break;
+        case 4:
+          dice[1].animate(DiceRotateTo(4), DiceTiming);
+          break;
+        case 5:
+          dice[1].animate(DiceRotateTo(5), DiceTiming);
+          break;
+        case 6:
+          dice[1].animate(DiceRotateTo(6), DiceTiming);
+          break;
+      }
+    }
+    RotateDiceOne();
+    RotateDiceTwo();
+  </script>
+  {% endif %}
+
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    {% if category == "totalwin1" or category == "totalwin2" or category == "totaldraw" %}
+    <div class="game-results-screen">
+      <div class="game-results">
+        <div class="game-results-text">
+          <div class="game-result-message">
+            {{message}}
+          </div>
+          <div class="result-table-container">
+            <table class="result-table">
+            <tr>
+              <th colspan = 2>Game Rounds</th>
+            </tr>
+            {% for stat in game_stat %}
+              {% if ">" in stat %}
+              <tr class="first-p_tr">
+                <td class="number-td">{{loop.index}}</td>
+                <td>{{stat}}</td>
+              </tr>
+              {% endif %}
+              {% if "<" in stat %}
+              <tr class="second-p_tr">
+                <td class="number-td">{{loop.index}}</td>
+                <td>{{stat}}</td>
+              </tr>
+              {% endif %}
+              {% if "=" in stat %}
+                <tr class="draw_tr">
+                    <td class="number-td">{{loop.index}}</td>
+                    <td>{{stat}}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+          </div>
+        </div>
+        <div class="game-results-buttons">
+          <a href="{{ url_for('start') }}" style="width: max-content;"><div class="button-31 button-31-red-blue" style="width: 150px;">Start Again</div></a>
+          <a href="{{ url_for('main_page') }}" style="width: max-content;"><div class="button-31 button-31-red-blue" style="width: 150px;">Main Page</div></a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}
